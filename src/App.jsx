@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import Papa from "papaparse";
 
@@ -90,48 +89,6 @@ const capabilityMap = [
   },
 ];
 
-const tagToSubCapabilityMap = {
-  "Cost Accounting": "3.3 Cost Accounting",
-  "Enterprise Consolidation": "1.2 Enterprise Consolidation",
-  "External Reporting": "1.3 External Reporting",
-  "Inventory Valuation": "1.4 Inventory Valuation",
-  "Investor Relations": "1.5 Investor Relations",
-  "Manage General Ledger": "1.6 Manage General Ledger",
-  "Performance Reporting": "1.7 Performance Reporting",
-  "Asset Performance Mgmt": "2.1 Asset Performance Mgmt",
-  "Decommissioning": "2.2 Decommissioning",
-  "Investment Planning": "2.3 Investment Planning",
-  "Manage Asset Lifecycle": "2.4 Manage Asset Lifecycle",
-  "Management Reporting": "3.1 Management Reporting",
-  "Business Planning": "3.2 Business Planning",
-  "Forecasting": "3.4 Forecasting",
-  "Manage Payment": "4.1 Manage Payment",
-  "Process Taxes": "4.2 Process Taxes",
-  "Time Stamp Report": "4.3 Time Stamp Report",
-  "5.1 Account Payables": "5.1 Account Payables",
-  "Billing": "5.2 Billing",
-  "Revenue Cycle Management": "5.3 Revenue Cycle Management",
-  "Travel & Expense Management": "5.4 Travel & Expense Management",
-  "Handle Trading": "6.1 Handle Trading",
-  "Manage Tax Questionnaire": "6.2 Manage Tax Questionnaire",
-  "Tax Determination": "6.3 Tax Determination",
-  "Tax Planning Strategies": "6.4 Tax Planning Strategies",
-  "Tax Returns Mgmt.": "6.5 Tax Returns Mgmt.",
-  "Tax Settlements": "6.6 Tax Settlements",
-  "7.1 Cash management": "7.1 Cash Management",
-  "Financial Risk Management": "7.2 Financial Risk Management",
-  "Foreign Exchange Management": "7.3 Foreign Exchange Management",
-  "Stakeholder Management": "8.1 Stakeholder Management",
-  "KPI Target Setting": "8.2 KPI Target Setting",
-  "ESG Data Collection": "8.3 ESG Data Collection",
-  "Taxonomy Management": "8.4 Taxonomy Management",
-  "Business Continuity": "9.1 Business Continuity",
-  "Manage Compliance": "9.2 Manage Compliance",
-  "Manage Fraud": "9.3 Manage Fraud",
-  "Manage Insurance": "9.4 Manage Insurance",
-  "Manage Security": "9.5 Manage Security",
-};
-
 export default function App() {
   const [csvData, setCsvData] = useState([]);
   const [selectedTools, setSelectedTools] = useState([]);
@@ -162,7 +119,6 @@ export default function App() {
     if (!entry || !entry.Tags) return [];
     return entry.Tags.split(",")
       .map((tag) => tag.trim())
-      .map((tag) => tagToSubCapabilityMap[tag])
       .filter(Boolean);
   };
 
