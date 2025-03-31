@@ -1,16 +1,8 @@
+
 import React, { useState } from "react";
 import Papa from "papaparse";
 
 const capabilityMap = [
-  {
-    category: "5 - Settlements & Payments",
-    capabilities: [
-      "5.1 Account Payables",
-      "5.2 Billing",
-      "5.3 Revenue Cycle Management",
-      "5.4 Travel & Expense Management",
-    ],
-  },
   {
     category: "1 - Accounting",
     capabilities: [
@@ -24,6 +16,15 @@ const capabilityMap = [
     ],
   },
   {
+    category: "2 - Asset Management",
+    capabilities: [
+      "2.1 Asset Performance Mgmt",
+      "2.2 Decommissioning",
+      "2.3 Investment Planning",
+      "2.4 Manage Asset Lifecycle",
+    ],
+  },
+  {
     category: "3 - Financial Planning & Analysis",
     capabilities: [
       "3.1 Management Reporting",
@@ -32,29 +33,109 @@ const capabilityMap = [
       "3.4 Forecasting",
     ],
   },
-  // voeg andere capabilities hier toe met juiste nummering
+  {
+    category: "4 - Payroll",
+    capabilities: [
+      "4.1 Manage Payment",
+      "4.2 Process Taxes",
+      "4.3 Time Stamp Report",
+    ],
+  },
+  {
+    category: "5 - Settlements & Payments",
+    capabilities: [
+      "5.1 Account Payables",
+      "5.2 Billing",
+      "5.3 Revenue Cycle Management",
+      "5.4 Travel & Expense Management",
+    ],
+  },
+  {
+    category: "6 - Tax Management",
+    capabilities: [
+      "6.1 Handle Trading",
+      "6.2 Manage Tax Questionnaire",
+      "6.3 Tax Determination",
+      "6.4 Tax Planning Strategies",
+      "6.5 Tax Returns Mgmt.",
+      "6.6 Tax Settlements",
+    ],
+  },
+  {
+    category: "7 - Treasury",
+    capabilities: [
+      "7.1 Cash Management",
+      "7.2 Financial Risk Management",
+      "7.3 Foreign Exchange Management",
+    ],
+  },
+  {
+    category: "8 - ESG",
+    capabilities: [
+      "8.1 Stakeholder Management",
+      "8.2 KPI Target Setting",
+      "8.3 ESG Data Collection",
+      "8.4 Taxonomy Management",
+    ],
+  },
+  {
+    category: "9 - Enterprise Risk Management",
+    capabilities: [
+      "9.1 Business Continuity",
+      "9.2 Manage Compliance",
+      "9.3 Manage Fraud",
+      "9.4 Manage Insurance",
+      "9.5 Manage Security",
+    ],
+  },
 ];
 
 const tagToSubCapabilityMap = {
-  "Accounts Payable": "5.1 Account Payables",
-  "Billing": "5.2 Billing",
-  "Revenue Cycle Management": "5.3 Revenue Cycle Management",
-  "Expense Management": "5.4 Travel & Expense Management",
-  "Cost Accounting": "1.1 Cost Accounting",
+  "Cost Accounting": "3.3 Cost Accounting",
   "Enterprise Consolidation": "1.2 Enterprise Consolidation",
   "External Reporting": "1.3 External Reporting",
   "Inventory Valuation": "1.4 Inventory Valuation",
   "Investor Relations": "1.5 Investor Relations",
-  "General Ledger": "1.6 Manage General Ledger",
+  "Manage General Ledger": "1.6 Manage General Ledger",
   "Performance Reporting": "1.7 Performance Reporting",
-  "Planning & Budgeting": "3.2 Business Planning",
-  "Financial Close": "1.7 Performance Reporting",
+  "Asset Performance Mgmt": "2.1 Asset Performance Mgmt",
+  "Decommissioning": "2.2 Decommissioning",
+  "Investment Planning": "2.3 Investment Planning",
+  "Manage Asset Lifecycle": "2.4 Manage Asset Lifecycle",
+  "Management Reporting": "3.1 Management Reporting",
+  "Business Planning": "3.2 Business Planning",
+  "Forecasting": "3.4 Forecasting",
+  "Manage Payment": "4.1 Manage Payment",
+  "Process Taxes": "4.2 Process Taxes",
+  "Time Stamp Report": "4.3 Time Stamp Report",
+  "Account Payables": "5.1 Account Payables",
+  "Billing": "5.2 Billing",
+  "Revenue Cycle Management": "5.3 Revenue Cycle Management",
+  "Travel & Expense Management": "5.4 Travel & Expense Management",
+  "Handle Trading": "6.1 Handle Trading",
+  "Manage Tax Questionnaire": "6.2 Manage Tax Questionnaire",
+  "Tax Determination": "6.3 Tax Determination",
+  "Tax Planning Strategies": "6.4 Tax Planning Strategies",
+  "Tax Returns Mgmt.": "6.5 Tax Returns Mgmt.",
+  "Tax Settlements": "6.6 Tax Settlements",
+  "Cash Management": "7.1 Cash Management",
+  "Financial Risk Management": "7.2 Financial Risk Management",
+  "Foreign Exchange Management": "7.3 Foreign Exchange Management",
+  "Stakeholder Management": "8.1 Stakeholder Management",
+  "KPI Target Setting": "8.2 KPI Target Setting",
+  "ESG Data Collection": "8.3 ESG Data Collection",
+  "Taxonomy Management": "8.4 Taxonomy Management",
+  "Business Continuity": "9.1 Business Continuity",
+  "Manage Compliance": "9.2 Manage Compliance",
+  "Manage Fraud": "9.3 Manage Fraud",
+  "Manage Insurance": "9.4 Manage Insurance",
+  "Manage Security": "9.5 Manage Security",
 };
 
 export default function App() {
   const [csvData, setCsvData] = useState([]);
   const [selectedTools, setSelectedTools] = useState([]);
-  const [activeOverlay, setActiveOverlay] = useState(null); // voor klikken op capabilities
+  const [activeOverlay, setActiveOverlay] = useState(null);
 
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
