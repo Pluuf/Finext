@@ -1,34 +1,60 @@
-
 import React, { useState } from "react";
 import Papa from "papaparse";
 
 const capabilityMap = [
-  { category: "1 - Accounting", capabilities: ["Cost Accounting", "Enterprise Consolidation", "External Reporting", "Inventory Valuation", "Investor Relations", "Manage General Ledger", "Performance Reporting"] },
-  { category: "2 - Asset Management", capabilities: ["Asset Performance Mgmt", "Decommissioning", "Investment Planning", "Manage Asset Lifecycle"] },
-  { category: "3 - Financial Planning & Analysis", capabilities: ["Management Reporting", "Business Planning", "Cost Accounting", "Forecasting"] },
-  { category: "4 - Payroll", capabilities: ["Manage Payment", "Process Taxes", "Time Stamp Report"] },
-  { category: "5 - Settlements & Payments", capabilities: ["Account Payables", "Billing", "Revenue Cycle Management", "Travel & Expense Management"] },
-  { category: "6 - Tax Management", capabilities: ["Handle Trading", "Manage Tax Questionnaire", "Tax Determination", "Tax Planning Strategies", "Tax Returns Mgmt.", "Tax Settlements"] },
-  { category: "7 - Treasury", capabilities: ["Cash Management", "Financial Risk Management", "Foreign Exchange Management"] },
-  { category: "8 - ESG", capabilities: ["Stakeholder Management", "KPI Target Setting", "ESG Data Collection", "Taxonomy Management"] },
-  { category: "9 - Enterprise Risk Management", capabilities: ["Business Continuity", "Manage Compliance", "Manage Fraud", "Manage Insurance", "Manage Security"] }
+  {
+    category: "5 - Settlements & Payments",
+    capabilities: [
+      "5.1 Account Payables",
+      "5.2 Billing",
+      "5.3 Revenue Cycle Management",
+      "5.4 Travel & Expense Management",
+    ],
+  },
+  {
+    category: "1 - Accounting",
+    capabilities: [
+      "1.1 Cost Accounting",
+      "1.2 Enterprise Consolidation",
+      "1.3 External Reporting",
+      "1.4 Inventory Valuation",
+      "1.5 Investor Relations",
+      "1.6 Manage General Ledger",
+      "1.7 Performance Reporting",
+    ],
+  },
+  {
+    category: "3 - Financial Planning & Analysis",
+    capabilities: [
+      "3.1 Management Reporting",
+      "3.2 Business Planning",
+      "3.3 Cost Accounting",
+      "3.4 Forecasting",
+    ],
+  },
+  // voeg andere capabilities hier toe met juiste nummering
 ];
 
 const tagToSubCapabilityMap = {
-  "Accounts Payable": "Account Payables",
-  "Accounts Receivable": "Account Receivables",
-  "Cashflow management": "Cash Management",
-  "General Ledger": "Manage General Ledger",
-  "Expense Management": "Travel & Expense Management",
-  "Planning & Budgeting": "Business Planning",
-  "Disclosure Management": "External Reporting",
-  "Financial Close": "Performance Reporting",
-  "Consolidation and reporting": "Enterprise Consolidation"
+  "Accounts Payable": "5.1 Account Payables",
+  "Billing": "5.2 Billing",
+  "Revenue Cycle Management": "5.3 Revenue Cycle Management",
+  "Expense Management": "5.4 Travel & Expense Management",
+  "Cost Accounting": "1.1 Cost Accounting",
+  "Enterprise Consolidation": "1.2 Enterprise Consolidation",
+  "External Reporting": "1.3 External Reporting",
+  "Inventory Valuation": "1.4 Inventory Valuation",
+  "Investor Relations": "1.5 Investor Relations",
+  "General Ledger": "1.6 Manage General Ledger",
+  "Performance Reporting": "1.7 Performance Reporting",
+  "Planning & Budgeting": "3.2 Business Planning",
+  "Financial Close": "1.7 Performance Reporting",
 };
 
-function App() {
+export default function App() {
   const [csvData, setCsvData] = useState([]);
   const [selectedTools, setSelectedTools] = useState([]);
+  const [activeOverlay, setActiveOverlay] = useState(null); // voor klikken op capabilities
 
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
@@ -73,45 +99,89 @@ function App() {
   const coverageMap = getCoverage();
 
   const getColor = (capability) => {
-    if (!coverageMap[capability]) return "red";
-    if (coverageMap[capability].length > 1) return "orange";
-    return "green";
+    if (!coverageMap[capability]) return "bg-red-100";
+    if (coverageMap[capability].length > 1) return "bg-orange-200";
+    return "bg-green-200";
   };
 
   const toolNames = [...new Set(csvData.map((row) => row.Name?.trim()).filter(Boolean))].sort();
 
   return (
-    <div style={{ padding: "1rem" }}>
-      <h1>Finance Capability Dashboard</h1>
+    <div className="p-4 space-y-4">
+      <h1 className="text-2xl font-bold">Finance Capability Dashboard</h1>
+
       <input type="file" accept=".csv" onChange={handleFileUpload} />
-      {toolNames.length > 0 && (
-        <div style={{ margin: "1rem 0" }}>
-          {toolNames.map((tool) => (
-            <label key={tool} style={{ display: "block" }}>
-              <input
-                type="checkbox"
-                checked={selectedTools.includes(tool)}
-                onChange={() => toggleTool(tool)}
-              />
-              {tool}
-            </label>
-          ))}
-        </div>
-      )}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1rem" }}>
-        {capabilityMap.map((category) => (
-          <div key={category.category}>
-            <h3>{category.category}</h3>
-            {category.capabilities.map((cap) => (
-              <div key={cap} style={{ background: getColor(cap), padding: "4px", margin: "2px", color: "white" }}>
-                {cap}
+
+      <div className="relative mt-6">
+        <img
+          src="/finance%20capability%20map.png"
+          alt="Finance Capability Map"
+          className="w-full h-auto"
+        />
+
+        <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
+          <div className="grid grid-cols-3 grid-rows-3 gap-4 p-8">
+            {capabilityMap.map((category) => (
+              <div key={category.category} className="space-y-1">
+                <div className="font-bold text-white shadow-md">
+                  {category.category}
+                </div>
+                {category.capabilities.map((cap) => (
+                  <div
+                    key={cap}
+                    className={`text-sm p-1 rounded shadow cursor-pointer ${getColor(cap)} pointer-events-auto`}
+                    title={
+                      coverageMap[cap]?.length > 1
+                        ? `Dubbele dekking: ${coverageMap[cap].join(", ")}`
+                        : coverageMap[cap]?.[0] || "Niet gedekt"
+                    }
+                    onClick={() =>
+                      setActiveOverlay((prev) => (prev === cap ? null : cap))
+                    }
+                  >
+                    {cap}
+                    {activeOverlay === cap && coverageMap[cap]?.length > 1 && (
+                      <div className="text-xs mt-1 text-gray-800">
+                        Dubbele dekking: {coverageMap[cap].join(", ")}
+                      </div>
+                    )}
+                  </div>
+                ))}
               </div>
             ))}
           </div>
-        ))}
+        </div>
       </div>
+
+      {toolNames.length > 0 && (
+        <div>
+          <h2 className="font-semibold mt-6">Selecteer tools:</h2>
+          <div className="border rounded p-2 w-full max-w-xl max-h-64 overflow-y-auto bg-white shadow mt-2 space-y-1">
+            {toolNames.map((tool) => (
+              <label key={tool} className="flex items-center space-x-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={selectedTools.includes(tool)}
+                  onChange={() => toggleTool(tool)}
+                />
+                <span>{tool}</span>
+              </label>
+            ))}
+          </div>
+
+          <div className="flex flex-wrap gap-2 mt-4">
+            {selectedTools.map((tool) => (
+              <button
+                key={tool}
+                onClick={() => toggleTool(tool)}
+                className="bg-gray-200 px-2 py-1 rounded"
+              >
+                {tool} ✕
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
-
-export default App;
