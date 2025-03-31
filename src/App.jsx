@@ -126,8 +126,9 @@ export default function App() {
     const coverage = {};
     selectedTools.forEach((tool) => {
       getMappedCapabilitiesForTool(tool).forEach((cap) => {
-        if (!coverage[cap]) coverage[cap] = [];
-        coverage[cap].push(tool);
+        const normalized = cap.trim();
+        if (!coverage[normalized]) coverage[normalized] = [];
+        coverage[normalized].push(tool);
       });
     });
     return coverage;
@@ -145,80 +146,4 @@ export default function App() {
 
   return (
     <div className="p-4 space-y-4">
-      <h1 className="text-2xl font-bold">Finance Capability Dashboard</h1>
-
-      <input type="file" accept=".csv" onChange={handleFileUpload} />
-
-      <div className="relative mt-6">
-        <img
-          src="/finance%20capability%20map.png"
-          alt="Finance Capability Map"
-          className="w-full h-auto"
-        />
-
-        <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
-          <div className="grid grid-cols-3 grid-rows-3 gap-4 p-8">
-            {capabilityMap.map((category) => (
-              <div key={category.category} className="space-y-1">
-                <div className="font-bold text-white shadow-md">
-                  {category.category}
-                </div>
-                {category.capabilities.map((cap) => (
-                  <div
-                    key={cap}
-                    className={`text-sm p-1 rounded shadow cursor-pointer ${getColor(cap)} pointer-events-auto`}
-                    title={
-                      coverageMap[cap]?.length > 1
-                        ? `Dubbele dekking: ${coverageMap[cap].join(", ")}`
-                        : coverageMap[cap]?.[0] || "Niet gedekt"
-                    }
-                    onClick={() =>
-                      setActiveOverlay((prev) => (prev === cap ? null : cap))
-                    }
-                  >
-                    {cap}
-                    {activeOverlay === cap && coverageMap[cap]?.length > 1 && (
-                      <div className="text-xs mt-1 text-gray-800">
-                        Dubbele dekking: {coverageMap[cap].join(", ")}
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {toolNames.length > 0 && (
-        <div>
-          <h2 className="font-semibold mt-6">Selecteer tools:</h2>
-          <div className="border rounded p-2 w-full max-w-xl max-h-64 overflow-y-auto bg-white shadow mt-2 space-y-1">
-            {toolNames.map((tool) => (
-              <label key={tool} className="flex items-center space-x-2 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={selectedTools.includes(tool)}
-                  onChange={() => toggleTool(tool)}
-                />
-                <span>{tool}</span>
-              </label>
-            ))}
-          </div>
-
-          <div className="flex flex-wrap gap-2 mt-4">
-            {selectedTools.map((tool) => (
-              <button
-                key={tool}
-                onClick={() => toggleTool(tool)}
-                className="bg-gray-200 px-2 py-1 rounded"
-              >
-                {tool} ✕
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
+      <h1 class
