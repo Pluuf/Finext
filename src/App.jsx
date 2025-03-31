@@ -117,9 +117,7 @@ export default function App() {
   const getMappedCapabilitiesForTool = (toolName) => {
     const entry = csvData.find((row) => row.Name === toolName);
     if (!entry || !entry.Tags) return [];
-    return entry.Tags.split(",")
-      .map((tag) => tag.trim())
-      .filter(Boolean);
+    return entry.Tags.split(",").map((tag) => tag.trim()).filter(Boolean);
   };
 
   const getCoverage = () => {
@@ -138,62 +136,52 @@ export default function App() {
 
   const getColor = (capability) => {
     if (!coverageMap[capability]) return "bg-red-100";
-    if (coverageMap[capability].length > 1) return "bg-orange-200";
-    return "bg-green-200";
+    if (coverageMap[capability].length > 1) return "bg-orange-300";
+    return "bg-green-300";
   };
 
   const toolNames = [...new Set(csvData.map((row) => row.Name?.trim()).filter(Boolean))].sort();
 
-    return (
+  return (
     <div className="p-4 space-y-4">
       <h1 className="text-2xl font-bold">Finance Capability Dashboard</h1>
 
       <input type="file" accept=".csv" onChange={handleFileUpload} />
 
-      <div className="relative mt-6">
-        <img
-          src="/finance%20capability%20map.png"
-          alt="Finance Capability Map"
-          className="w-full h-auto"
-        />
-
-        <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
-          <div className="grid grid-cols-3 grid-rows-3 gap-4 p-8">
-            {capabilityMap.map((category) => (
-              <div key={category.category} className="space-y-1">
-                <div className="font-bold text-white shadow-md">
-                  {category.category}
+      <div className="grid grid-cols-3 gap-6 mt-8">
+        {capabilityMap.map((category) => (
+          <div key={category.category} className="bg-gray-50 p-3 rounded shadow">
+            <h2 className="font-semibold mb-2">{category.category}</h2>
+            <div className="space-y-1">
+              {category.capabilities.map((cap) => (
+                <div
+                  key={cap}
+                  className={`text-sm p-1 rounded shadow cursor-pointer ${getColor(cap)}`}
+                  title={
+                    coverageMap[cap]?.length > 1
+                      ? `Dubbele dekking: ${coverageMap[cap].join(", ")}`
+                      : coverageMap[cap]?.[0] || "Niet gedekt"
+                  }
+                  onClick={() =>
+                    setActiveOverlay((prev) => (prev === cap ? null : cap))
+                  }
+                >
+                  {cap}
+                  {activeOverlay === cap && coverageMap[cap]?.length > 1 && (
+                    <div className="text-xs mt-1 text-gray-800 bg-white rounded p-1 shadow pointer-events-auto">
+                      Dubbele dekking: {coverageMap[cap].join(", ")}
+                    </div>
+                  )}
                 </div>
-                {category.capabilities.map((cap) => (
-                  <div
-                    key={cap}
-                    className={`text-sm p-1 rounded shadow cursor-pointer ${getColor(cap)} pointer-events-auto`}
-                    title={
-                      coverageMap[cap]?.length > 1
-                        ? `Dubbele dekking: ${coverageMap[cap].join(", ")}`
-                        : coverageMap[cap]?.[0] || "Niet gedekt"
-                    }
-                    onClick={() =>
-                      setActiveOverlay((prev) => (prev === cap ? null : cap))
-                    }
-                  >
-                    {cap}
-                    {activeOverlay === cap && coverageMap[cap]?.length > 1 && (
-                      <div className="text-xs mt-1 text-gray-800 bg-white rounded p-1 shadow pointer-events-auto">
-                        Dubbele dekking: {coverageMap[cap].join(", ")}
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
+        ))}
       </div>
 
       {toolNames.length > 0 && (
-        <div>
-          <h2 className="font-semibold mt-6">Selecteer tools:</h2>
+        <div className="mt-8">
+          <h2 className="font-semibold">Selecteer tools:</h2>
           <div className="border rounded p-2 w-full max-w-xl max-h-64 overflow-y-auto bg-white shadow mt-2 space-y-1">
             {toolNames.map((tool) => (
               <label key={tool} className="flex items-center space-x-2 cursor-pointer">
