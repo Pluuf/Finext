@@ -101,11 +101,11 @@ export default function App() {
   };
 
   const getColor = (capability) => {
-    if (isProven(capability)) return "bg-green-300 ring-4 ring-green-800";
-    if (!coverageMap[capability]) return "bg-red-100";
-    if (coverageMap[capability].length > 1) return "bg-orange-300";
-    return "bg-green-300";
-  };
+  if (isProven(capability)) return "bg-green-300 ring-4 ring-green-800 ring";
+  if (!coverageMap[capability]) return "bg-red-100";
+  if (coverageMap[capability].length > 1) return "bg-orange-300";
+  return "bg-green-300";
+};
 
   const toolNames = [...new Set(csvData.map((row) => row.Name?.trim()).filter(Boolean))].sort();
 
