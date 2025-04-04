@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import Papa from "papaparse";
 
@@ -40,6 +41,7 @@ export default function App() {
   const [csvData, setCsvData] = useState([]);
   const [selectedTools, setSelectedTools] = useState([]);
   const [activeOverlay, setActiveOverlay] = useState(null);
+  const [suggestions, setSuggestions] = useState([]);
 
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
@@ -61,10 +63,10 @@ export default function App() {
     );
   };
 
-  const getMappedCapabilitiesForTool = (toolName) => {
+  const getMappedCapabilitiesForTool = (toolName, column = "Sub-capabilities") => {
     const entry = csvData.find((row) => row.Name === toolName);
-    if (!entry || !entry["Sub-capabilities"]) return [];
-    return entry["Sub-capabilities"].split(",").map((tag) => tag.trim()).filter(Boolean);
+    if (!entry || !entry[column]) return [];
+    return entry[column].split(",").map((tag) => tag.trim()).filter(Boolean);
   };
 
   const getCoverage = () => {
@@ -81,6 +83,22 @@ export default function App() {
 
   const coverageMap = getCoverage();
 
+  const isProven = (capability) => {
+    return selectedTools.some((tool) =>
+      getMappedCapabilitiesForTool(tool, "Proven Sub-Capabilities").includes(capability)
+    );
+  };
+
+  const getSuggestionsFor = (capability) => {
+    return csvData
+      .filter(row =>
+        !selectedTools.includes(row.Name) &&
+        row["Sub-capabilities"] &&
+        row["Sub-capabilities"].split(",").map(x => x.trim()).includes(capability)
+      )
+      .map(row => row.Name);
+  };
+
   const getColor = (capability) => {
     if (!coverageMap[capability]) return "bg-red-100";
     if (coverageMap[capability].length > 1) return "bg-orange-300";
@@ -90,49 +108,51 @@ export default function App() {
   const toolNames = [...new Set(csvData.map((row) => row.Name?.trim()).filter(Boolean))].sort();
 
   return (
-    <div
-      className="p-6 min-h-screen"
-      style={{
-        backgroundColor: "#0066CC",
-        fontFamily: "'Inter', 'Open Sans', sans-serif",
-        color: "white"
-      }}
-    >
+    <div className="p-6 min-h-screen" style={{ backgroundColor: "#0066CC", fontFamily: "Inter, sans-serif", color: "white" }}>
       <h1 className="text-3xl font-bold mb-4">Finance Capability Dashboard</h1>
 
-      <input
-        type="file"
-        accept=".csv"
-        onChange={handleFileUpload}
-        className="mb-6 text-black"
-      />
+      <input type="file" accept=".csv" onChange={handleFileUpload} className="mb-6 text-black" />
 
       <div className="grid grid-cols-3 gap-6">
         {capabilityMap.map((category) => (
           <div key={category.category} className="bg-white/10 p-3 rounded shadow space-y-1">
-            <div
-              className="text-white font-semibold px-2 py-1 rounded"
-              style={{ backgroundColor: "#00C3C8" }}
-            >
+            <div className="text-white font-semibold px-2 py-1 rounded" style={{ backgroundColor: "#00C3C8" }}>
               {category.category}
             </div>
             {category.capabilities.map((cap) => (
               <div
                 key={cap}
-                className={`text-sm p-1 rounded shadow cursor-pointer ${getColor(cap)} text-black`}
+                className={`text-sm p-1 rounded shadow cursor-pointer ${getColor(cap)} ${isProven(cap) ? "ring-2 ring-blue-500" : ""} text-black`}
                 title={
                   coverageMap[cap]?.length > 1
                     ? `Dubbele dekking: ${coverageMap[cap].join(", ")}`
                     : coverageMap[cap]?.[0] || "Niet gedekt"
                 }
-                onClick={() =>
-                  setActiveOverlay((prev) => (prev === cap ? null : cap))
-                }
+                onClick={() => {
+                  setActiveOverlay(cap);
+                  if (!coverageMap[cap]) {
+                    setSuggestions(getSuggestionsFor(cap));
+                  } else {
+                    setSuggestions([]);
+                  }
+                }}
               >
                 {cap}
                 {activeOverlay === cap && coverageMap[cap]?.length > 1 && (
                   <div className="text-xs mt-1 text-gray-800 bg-white rounded p-1 shadow pointer-events-auto">
                     Dubbele dekking: {coverageMap[cap].join(", ")}
+                  </div>
+                )}
+                {activeOverlay === cap && !coverageMap[cap] && suggestions.length > 0 && (
+                  <div className="text-xs mt-1 text-gray-900 bg-yellow-100 border border-yellow-300 rounded p-2 pointer-events-auto">
+                    <div className="font-semibold mb-1">Suggesties om deze sub-capability te dekken:</div>
+                    <ul className="list-disc pl-5">
+                      {suggestions.map((tool) => (
+                        <li key={tool} className="hover:underline cursor-pointer" onClick={() => toggleTool(tool)}>
+                          {tool}
+                        </li>
+                      ))}
+                    </ul>
                   </div>
                 )}
               </div>
