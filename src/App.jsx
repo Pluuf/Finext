@@ -122,10 +122,10 @@ export default function App() {
             {category.capabilities.map((cap) => (
               <div
                 key={cap}
-                className={\`text-sm p-1 rounded shadow cursor-pointer \${getColor(cap)} text-black\`}
+                className={`text-sm p-1 rounded shadow cursor-pointer ${getColor(cap)} text-black`}
                 title={
                   coverageMap[cap]?.length > 1
-                    ? \`Dubbele dekking: \${coverageMap[cap].join(", ")}\`
+                    ? `Dubbele dekking: ${coverageMap[cap].join(", ")}`
                     : coverageMap[cap]?.[0] || "Niet gedekt"
                 }
                 onClick={() => {
