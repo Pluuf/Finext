@@ -63,8 +63,8 @@ export default function App() {
 
   const getMappedCapabilitiesForTool = (toolName) => {
     const entry = csvData.find((row) => row.Name === toolName);
-    if (!entry || !entry.Tags) return [];
-    return entry.Tags.split(",").map((tag) => tag.trim()).filter(Boolean);
+    if (!entry || !entry["Sub-capabilities"]) return [];
+    return entry["Sub-capabilities"].split(",").map((tag) => tag.trim()).filter(Boolean);
   };
 
   const getCoverage = () => {
