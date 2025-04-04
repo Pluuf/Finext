@@ -1,8 +1,5 @@
-
 import React, { useState } from "react";
 import Papa from "papaparse";
-
-// capabilityMap komt hier (ingekort)
 
 const capabilityMap = [
   { category: "1 - Accounting", capabilities: [
@@ -38,7 +35,6 @@ const capabilityMap = [
     "9.4 Manage Insurance", "9.5 Manage Security"
   ]}
 ];
-
 
 export default function App() {
   const [csvData, setCsvData] = useState([]);
@@ -88,13 +84,10 @@ export default function App() {
 
   const isProven = (capability) => {
     const normalized = capability.trim().toLowerCase();
-    const result = selectedTools.some((tool) => {
-      const provenList = getMappedCapabilitiesForTool(tool, "Proven Sub-Capabilities").map(c => c.trim().toLowerCase());
-      const match = provenList.includes(normalized);
-      console.log(`Tool: ${tool}, Proven List:`, provenList, "| Checking:", normalized, "→", match);
-      return match;
+    return selectedTools.some((tool) => {
+      const provenCaps = getMappedCapabilitiesForTool(tool, "Proven Sub-capabilities").map(c => c.trim().toLowerCase());
+      return provenCaps.includes(normalized);
     });
-    return result;
   };
 
   const getSuggestionsFor = (capability) => {
@@ -108,6 +101,7 @@ export default function App() {
   };
 
   const getColor = (capability) => {
+    if (isProven(capability)) return "bg-green-300 ring-4 ring-green-800";
     if (!coverageMap[capability]) return "bg-red-100";
     if (coverageMap[capability].length > 1) return "bg-orange-300";
     return "bg-green-300";
@@ -118,9 +112,7 @@ export default function App() {
   return (
     <div className="p-6 min-h-screen" style={{ backgroundColor: "#0066CC", fontFamily: "Inter, sans-serif", color: "white" }}>
       <h1 className="text-3xl font-bold mb-4">Finance Capability Dashboard</h1>
-
       <input type="file" accept=".csv" onChange={handleFileUpload} className="mb-6 text-black" />
-
       <div className="grid grid-cols-3 gap-6">
         {capabilityMap.map((category) => (
           <div key={category.category} className="bg-white/10 p-3 rounded shadow space-y-1">
@@ -130,7 +122,7 @@ export default function App() {
             {category.capabilities.map((cap) => (
               <div
                 key={cap}
-                className={\`text-sm p-1 rounded shadow cursor-pointer \${getColor(cap)} \${isProven(cap) ? "ring-2 ring-blue-500" : ""} text-black\`}
+                className={\`text-sm p-1 rounded shadow cursor-pointer \${getColor(cap)} text-black\`}
                 title={
                   coverageMap[cap]?.length > 1
                     ? \`Dubbele dekking: \${coverageMap[cap].join(", ")}\`
