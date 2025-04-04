@@ -101,11 +101,11 @@ export default function App() {
   };
 
   const getColor = (capability) => {
-  if (isProven(capability)) return "bg-green-300 ring-4 ring-green-800 ring";
-  if (!coverageMap[capability]) return "bg-red-100";
-  if (coverageMap[capability].length > 1) return "bg-orange-300";
-  return "bg-green-300";
-};
+    if (isProven(capability)) return "bg-green-300 ring-4 ring-green-800 ring";
+    if (!coverageMap[capability]) return "bg-red-100";
+    if (coverageMap[capability].length > 1) return "bg-orange-300";
+    return "bg-green-300";
+  };
 
   const toolNames = [...new Set(csvData.map((row) => row.Name?.trim()).filter(Boolean))].sort();
 
@@ -113,6 +113,7 @@ export default function App() {
     <div className="p-6 min-h-screen" style={{ backgroundColor: "#0066CC", fontFamily: "Inter, sans-serif", color: "white" }}>
       <h1 className="text-3xl font-bold mb-4">Finance Capability Dashboard</h1>
       <input type="file" accept=".csv" onChange={handleFileUpload} className="mb-6 text-black" />
+
       <div className="grid grid-cols-3 gap-6">
         {capabilityMap.map((category) => (
           <div key={category.category} className="bg-white/10 p-3 rounded shadow space-y-1">
@@ -160,6 +161,36 @@ export default function App() {
           </div>
         ))}
       </div>
+
+      {toolNames.length > 0 && (
+        <div className="mt-10">
+          <h2 className="font-semibold text-white mb-2">Selecteer tools:</h2>
+          <div className="border rounded p-2 w-full max-w-xl max-h-64 overflow-y-auto bg-white shadow space-y-1 text-black">
+            {toolNames.map((tool) => (
+              <label key={tool} className="flex items-center space-x-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={selectedTools.includes(tool)}
+                  onChange={() => toggleTool(tool)}
+                />
+                <span>{tool}</span>
+              </label>
+            ))}
+          </div>
+
+          <div className="flex flex-wrap gap-2 mt-4">
+            {selectedTools.map((tool) => (
+              <button
+                key={tool}
+                onClick={() => toggleTool(tool)}
+                className="bg-gray-200 px-2 py-1 rounded text-black"
+              >
+                {tool} ✕
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
