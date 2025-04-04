@@ -2,6 +2,8 @@
 import React, { useState } from "react";
 import Papa from "papaparse";
 
+// capabilityMap komt hier (ingekort)
+
 const capabilityMap = [
   { category: "1 - Accounting", capabilities: [
     "1.1 Cost Accounting", "1.2 Enterprise Consolidation", "1.3 External Reporting",
@@ -34,8 +36,9 @@ const capabilityMap = [
   { category: "9 - Enterprise Risk Management", capabilities: [
     "9.1 Business Continuity", "9.2 Manage Compliance", "9.3 Manage Fraud",
     "9.4 Manage Insurance", "9.5 Manage Security"
-  ]},
+  ]}
 ];
+
 
 export default function App() {
   const [csvData, setCsvData] = useState([]);
@@ -84,9 +87,14 @@ export default function App() {
   const coverageMap = getCoverage();
 
   const isProven = (capability) => {
-    return selectedTools.some((tool) =>
-      getMappedCapabilitiesForTool(tool, "Proven Sub-Capabilities").includes(capability)
-    );
+    const normalized = capability.trim().toLowerCase();
+    const result = selectedTools.some((tool) => {
+      const provenList = getMappedCapabilitiesForTool(tool, "Proven Sub-Capabilities").map(c => c.trim().toLowerCase());
+      const match = provenList.includes(normalized);
+      console.log(`Tool: ${tool}, Proven List:`, provenList, "| Checking:", normalized, "→", match);
+      return match;
+    });
+    return result;
   };
 
   const getSuggestionsFor = (capability) => {
@@ -122,10 +130,10 @@ export default function App() {
             {category.capabilities.map((cap) => (
               <div
                 key={cap}
-                className={`text-sm p-1 rounded shadow cursor-pointer ${getColor(cap)} ${isProven(cap) ? "ring-2 ring-blue-500" : ""} text-black`}
+                className={\`text-sm p-1 rounded shadow cursor-pointer \${getColor(cap)} \${isProven(cap) ? "ring-2 ring-blue-500" : ""} text-black\`}
                 title={
                   coverageMap[cap]?.length > 1
-                    ? `Dubbele dekking: ${coverageMap[cap].join(", ")}`
+                    ? \`Dubbele dekking: \${coverageMap[cap].join(", ")}\`
                     : coverageMap[cap]?.[0] || "Niet gedekt"
                 }
                 onClick={() => {
@@ -160,36 +168,6 @@ export default function App() {
           </div>
         ))}
       </div>
-
-      {toolNames.length > 0 && (
-        <div className="mt-10">
-          <h2 className="font-semibold text-white mb-2">Selecteer tools:</h2>
-          <div className="border rounded p-2 w-full max-w-xl max-h-64 overflow-y-auto bg-white shadow space-y-1 text-black">
-            {toolNames.map((tool) => (
-              <label key={tool} className="flex items-center space-x-2 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={selectedTools.includes(tool)}
-                  onChange={() => toggleTool(tool)}
-                />
-                <span>{tool}</span>
-              </label>
-            ))}
-          </div>
-
-          <div className="flex flex-wrap gap-2 mt-4">
-            {selectedTools.map((tool) => (
-              <button
-                key={tool}
-                onClick={() => toggleTool(tool)}
-                className="bg-gray-200 px-2 py-1 rounded text-black"
-              >
-                {tool} ✕
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
     </div>
   );
 }
