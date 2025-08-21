@@ -27,12 +27,9 @@ const capabilityMap = [
   { category: "7 - Treasury", capabilities: [
     "7.1 Cash Management", "7.2 Financial Risk Management", "7.3 Foreign Exchange Management"
   ]},
-  { category: "8 - ESG", capabilities: [
-    "8.1 Stakeholder Management", "8.2 KPI Target Setting", "8.3 ESG Data Collection", "8.4 Taxonomy Management"
-  ]},
-  { category: "9 - Enterprise Risk Management", capabilities: [
-    "9.1 Business Continuity", "9.2 Manage Compliance", "9.3 Manage Fraud",
-    "9.4 Manage Insurance", "9.5 Manage Security"
+  { category: "8 - Enterprise Risk Management", capabilities: [
+    "8.1 Business Continuity", "8.2 Manage Compliance", "8.3 Manage Fraud",
+    "8.4 Manage Insurance", "8.5 Manage Security"
   ]}
 ];
 
