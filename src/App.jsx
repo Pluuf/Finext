@@ -114,7 +114,7 @@ export default function App() {
 
       <div className="grid grid-cols-3 gap-6">
         {capabilityMap.map((category) => (
-          <div key={category.category} className="bg-white/10 p-3 rounded shadow space-y-1">
+          <div key={category.category} className="bg-[#0066CC] p-4 space-y-3 border border-white">
             <div className="text-white font-semibold px-2 py-1 rounded" style={{ backgroundColor: "#00C3C8" }}>
               {category.category}
             </div>
