@@ -107,7 +107,7 @@ export default function App() {
   const toolNames = [...new Set(csvData.map((row) => row.Name?.trim()).filter(Boolean))].sort();
 
   return (
-    <div className="p-6 min-h-screen" style={{ backgroundColor: "#000000", fontFamily: "Inter, sans-serif", color: "#0066CC" }}>
+    <div className="p-6 min-h-screen bg-white text-[#0066CC]" style=={{ fontFamily: "Inter, sans-serif" }}>
       <h1 className="text-3xl font-bold mb-4">Finance Capability Map</h1>
           <h2 className="font-semibold text-white mb-2">Welcome to the Finext Capability Map, here we do blababla</h2>
       <input type="file" accept=".csv" onChange={handleFileUpload} className="mb-6 text-black" />
