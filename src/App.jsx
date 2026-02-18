@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Papa from "papaparse";
 
 const capabilityMap = [
-  { category: "1 - Accounting", capabilities: [
+  { category: "1 - Accountingu", capabilities: [
     "1.1 Cost Accounting", "1.2 Enterprise Consolidation", "1.3 External Reporting",
     "1.4 Inventory Valuation", "1.5 Investor Relations", "1.6 Manage General Ledger",
     "1.7 Performance Reporting"
