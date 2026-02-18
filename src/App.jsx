@@ -109,7 +109,7 @@ export default function App() {
   return (
     <div className="p-6 min-h-screen bg-white text-[#0066CC]" style={{ fontFamily: "Inter, sans-serif" }}>
       <h1 className="text-3xl font-bold mb-4">Finance Capability Map</h1>
-          <h2 className="font-semibold text-white mb-2">Welcome to the Finextu Capability Map, here we do blababla</h2>
+          <h2 className="font-semibold mb-2">Welcome to the Finext Capability Map, here we do blababla</h2>
       <input type="file" accept=".csv" onChange={handleFileUpload} className="mb-6 text-black" />
 
       <div className="grid grid-cols-3 gap-6">
