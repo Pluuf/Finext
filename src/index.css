@@ -2,3 +2,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+html, body, #root {
+  background-color: #ffffff !important;
+  margin: 0;
+  padding: 0;
+}
