@@ -154,8 +154,8 @@ const getPillStyle = (capability) => {
 				className="text-sm px-4 py-2 cursor-pointer"
                 title={
                   coverageMap[cap]?.length > 1
-                    ? `Dubbele dekking: ${coverageMap[cap].join(", ")}`
-                    : coverageMap[cap]?.[0] || "Niet gedekt"
+                    ? `double coverage: ${coverageMap[cap].join(", ")}`
+                    : coverageMap[cap]?.[0] || "Not covered"
                 }
                 onClick={() => {
                   setActiveOverlay(cap);
@@ -169,7 +169,7 @@ const getPillStyle = (capability) => {
                 {cap}
                 {activeOverlay === cap && coverageMap[cap]?.length > 1 && (
                   <div className="text-xs mt-1 text-gray-800 bg-white rounded p-1 shadow pointer-events-auto">
-                    Dubbele dekking: {coverageMap[cap].join(", ")}
+                    double coverage: {coverageMap[cap].join(", ")}
                   </div>
                 )}
                 {activeOverlay === cap && !coverageMap[cap] && suggestions.length > 0 && (
