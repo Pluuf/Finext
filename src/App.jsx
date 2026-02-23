@@ -97,11 +97,33 @@ export default function App() {
       .map(row => row.Name);
   };
 
- const getColor = (capability) => {
-  if (coverageMap[capability]?.length > 1) return "bg-orange-300";
-  if (isProven(capability)) return "bg-green-300 ring-4 ring-green-800 ring";
-  if (coverageMap[capability]) return "bg-green-300";
-  return "bg-red-100";
+ const COLORS = {
+  notCovered: "#0066CC",     // blauw
+  covered: "#FFFFFF",        // wit
+  double: "#00C3C8",         // turquoise
+  proven: "#F3A1C6",         // roze
+  border: "#FFFFFF"
+};
+
+const getPillStyle = (capability) => {
+  const isDouble = (coverageMap[capability]?.length ?? 0) > 1;
+  const isCovered = (coverageMap[capability]?.length ?? 0) >= 1;
+  const proven = isProven(capability);
+
+  let bg = COLORS.notCovered;
+
+  if (isCovered) bg = COLORS.covered;
+  if (proven) bg = COLORS.proven;
+  if (isDouble) bg = COLORS.double; // hoogste prioriteit
+
+  const textColor = bg === COLORS.covered ? "#0066CC" : "#FFFFFF";
+
+  return {
+    backgroundColor: bg,
+    color: textColor,
+    border: `2px solid ${COLORS.border}`,
+    borderRadius: "9999px"
+  };
 };
 
   const toolNames = [...new Set(csvData.map((row) => row.Name?.trim()).filter(Boolean))].sort();
@@ -121,7 +143,8 @@ export default function App() {
             {category.capabilities.map((cap) => (
               <div
                 key={cap}
-                className={`text-sm px-4 py-2 cursor-pointer border-2 rounded-full text-white bg-[#0066CC] ${getPillBorderClass(cap)}`}
+                style={getPillStyle(cap)}
+				className="text-sm px-4 py-2 cursor-pointer"
                 title={
                   coverageMap[cap]?.length > 1
                     ? `Dubbele dekking: ${coverageMap[cap].join(", ")}`
