@@ -136,10 +136,10 @@ const getPillStyle = (capability) => {
            <h2 className="mb-2">
 			Once your tech stack is uploaded, you'll see your results color-coded as follows:<br />
 			<br />
-			Blue: An uncovered capability.<br />
-			White: A covered capability.<br />
-			Turquoise: Double coverage. Hover or click to see the details.<br />
-			Pink: A solution we consider "proven" and have extensive experience with.
+			<strong>Blue:</strong> An uncovered capability.<br />
+			<strong>White:</strong> A covered capability.<br />
+			<strong>Turquoise:</strong> Double coverage. Hover or click to see the details.<br />
+			<strong>Pink:</strong> A solution we consider "proven" and have extensive experience with.
 		   </h2>
      <div className="grid grid-cols-3 gap-6">
         {capabilityMap.map((category) => (
