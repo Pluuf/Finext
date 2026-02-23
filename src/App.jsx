@@ -133,7 +133,6 @@ const getPillStyle = (capability) => {
       <h1 className="text-3xl font-bold mb-4">Finance Capability Map</h1>
           <h2 className="mb-2">Welcome to the Finext Capability Map, the tool that maps your tech stack onto the finance capabilities. To get started, go to the Finext tech stack page and export the data. Unzip the downloaded file, then upload the "CSV_all" file below.</h2>
       <input type="file" accept=".csv" onChange={handleFileUpload} className="mb-6 text-black" />
-           <h2 className="mb-2">Welcome to the Finext Capability Map, the tool that maps your tech stack onto the finance capabilities. To get started, go to the Finext tech stack page and export the data. Unzip the downloaded file, then upload the "CSV_all" file below.</h2>
      <div className="grid grid-cols-3 gap-6">
         {capabilityMap.map((category) => (
           <div key={category.category} className="bg-[#0066CC] p-4 space-y-3 border border-white">
