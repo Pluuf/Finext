@@ -38,9 +38,16 @@ export default function App() {
   const [selectedTools, setSelectedTools] = useState([]);
   const [activeOverlay, setActiveOverlay] = useState(null);
   const [suggestions, setSuggestions] = useState([]);
+  const [csvData, setCsvData] = useState([]);
 
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
+
+    if (!file) {
+      setUploadStatus("idle");
+      return;
+    }
+
     Papa.parse(file, {
       header: true,
       skipEmptyLines: true,
@@ -48,7 +55,9 @@ export default function App() {
         const cleaned = results.data
           .filter((row) => row.Name && row.Name.trim() !== "")
           .map((row) => ({ ...row, Name: row.Name.trim() }));
+
         setCsvData(cleaned);
+        setUploadStatus("success");
       },
     });
   };
@@ -132,7 +141,19 @@ const getPillStyle = (capability) => {
     <div className="p-6 min-h-screen bg-white text-[#0066CC]" style={{ fontFamily: "Inter, sans-serif" }}>
       <h1 className="text-3xl font-bold mb-4">Finance Capability Map</h1>
           <h2 className="mb-2">Welcome to the Finext Capability Map, the tool that maps your tech stack onto the finance capabilities. To get started, go to the Finext tech stack page and export the data. Unzip the downloaded file, then upload the "CSV_all" file below.</h2>
-      <input type="file" accept=".csv" onChange={handleFileUpload} className="mb-6 text-black" />
+      <div className="mb-6">
+        <label className="cursor-pointer inline-block">
+          <input
+            type="file"
+            accept=".csv"
+            onChange={handleFileUpload}
+            className="hidden"
+          />
+          <div className="bg-[#0066CC] text-white px-10 py-4 text-xl font-medium">
+            {uploadStatus === "success" ? "Upload succesful" : "No file selected"}
+          </div>
+        </label>
+      </div>	  
            <h2 className="mb-2">
 			Once your tech stack is uploaded, you'll see your results color-coded as follows:<br />
 			<br />
