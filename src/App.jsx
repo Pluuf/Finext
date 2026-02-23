@@ -150,7 +150,7 @@ const getPillStyle = (capability) => {
             className="hidden"
           />
           <div className="bg-[#0066CC] text-white px-10 py-4 text-xl font-medium">
-            {uploadStatus === "success" ? "Upload succesful" : "No file selected"}
+            {uploadStatus === "success" ? "Upload successful" : "No file selected"}
           </div>
         </label>
       </div>	  
