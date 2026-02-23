@@ -38,8 +38,8 @@ export default function App() {
   const [selectedTools, setSelectedTools] = useState([]);
   const [activeOverlay, setActiveOverlay] = useState(null);
   const [suggestions, setSuggestions] = useState([]);
-  const [csvData, setCsvData] = useState([]);
-
+  const [uploadStatus, setUploadStatus] = useState("idle");
+  
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
 
